@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offchain Market - USDT BEP20</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        @keyframes blinker { 50% { opacity: 0; } }
+        .animate-scroll { display: inline-block; white-space: nowrap; animation: scroll 20s linear infinite; }
+        .animate-scroll:hover { animation-play-state: paused; }
+        .blink-text { animation: blinker 1s linear infinite; color: #fbbf24; font-weight: 800; }
+    </style>
+</head>
+<body class="bg-slate-950 text-white font-sans antialiased min-h-screen">
+
+    <header class="p-4 md:p-6 border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <div class="bg-yellow-500 p-2 rounded-lg text-black">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </div>
+            <h1 class="text-lg md:text-xl font-black tracking-tighter uppercase">OFFCHAIN <span class="text-yellow-400">MARKET</span></h1>
+        </div>
+        <button onclick="toggleLang()" id="langBtn" class="text-[10px] bg-slate-800 hover:bg-slate-700 px-4 py-1.5 rounded-full border border-slate-600 font-bold uppercase transition-all">Switch to EN</button>
+    </header>
+
+    <div class="bg-slate-900 border-b border-slate-800 py-3 overflow-hidden flex items-center w-full">
+        <div id="txt-status-label" class="bg-green-600 text-white text-[9px] font-black px-3 py-1 z-10 shadow-lg uppercase italic ml-2 rounded shrink-0">ONLINE</div>
+        <div class="animate-scroll whitespace-nowrap">
+            <span id="ticker-content" class="mx-10 text-sm font-bold uppercase tracking-tight">
+                </span>
+        </div>
+    </div>
+
+    <main class="max-w-2xl mx-auto my-6 p-4">
+        
+        <div class="mb-8 text-center">
+            <h2 id="txt-main-title" class="text-2xl font-black mb-2">Beli USDT BEP20</h2>
+            <p id="txt-main-desc" class="text-slate-400 text-sm">Pembayaran aman dan pengiriman koin instan setelah verifikasi.</p>
+        </div>
+
+        <div class="bg-slate-900 rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-800 relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-yellow-500/10 rounded-full blur-3xl"></div>
+            
+            <h3 id="txt-pay-instr" class="text-lg font-bold mb-6 flex items-center gap-2">
+                <i class="fa-solid fa-qrcode text-yellow-500"></i> Scan & Bayar
+            </h3>
+
+            <div class="flex flex-col items-center justify-center mb-8">
+                <div class="bg-white p-3 rounded-2xl shadow-[0_0_30px_rgba(234,179,8,0.15)]">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=0x61C0604221ae4755DEeed46d03A154230c0D41c2" alt="Payment QR" class="w-44 h-44">
+                </div>
+                <div class="mt-4 bg-yellow-500/10 px-4 py-1 rounded-full border border-yellow-500/20">
+                    <p class="text-[10px] font-black text-yellow-500 uppercase tracking-widest">Network: BNB Smart Chain (BEP20)</p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div>
+                    <label id="txt-addr-label" class="block text-[10px] font-bold text-slate-500 uppercase mb-2 ml-1">Alamat Wallet Tujuan:</label>
+                    <div class="relative">
+                        <input type="text" id="walletAddr" readonly value="0x61C0604221ae4755DEeed46d03A154230c0D41c2" 
+                        class="w-full bg-black/50 border border-slate-700 p-4 pr-12 rounded-2xl text-[10px] md:text-xs font-mono text-white outline-none">
+                        <button onclick="copyWallet()" class="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-slate-400 hover:text-white">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-black/30 p-4 rounded-2xl border border-slate-800/50">
+                        <label id="txt-amount-label" class="block text-[10px] text-slate-400 mb-2 font-bold uppercase tracking-wider">Jumlah USDT:</label>
+                        <input type="number" id="buyAmount" placeholder="0.00" class="w-full bg-transparent border-b border-slate-700 p-1 text-sm text-yellow-400 focus:border-yellow-500 outline-none font-bold">
+                    </div>
+                    <div class="bg-black/30 p-4 rounded-2xl border border-slate-800/50">
+                        <label id="txt-receiver-label" class="block text-[10px] text-slate-400 mb-2 font-bold uppercase tracking-wider">Kirim ke Wallet Anda:</label>
+                        <input type="text" id="receiverAddr" placeholder="0x..." class="w-full bg-transparent border-b border-slate-700 p-1 text-sm text-white focus:border-yellow-500 outline-none font-mono">
+                    </div>
+                </div>
+
+                <button onclick="confirmWA()" class="w-full bg-yellow-500 hover:bg-yellow-600 text-slate-950 font-black py-4 rounded-2xl transition duration-300 flex items-center justify-center gap-3 uppercase shadow-lg shadow-yellow-500/20">
+                    <i class="fa-brands fa-whatsapp text-xl"></i>
+                    <span id="txt-btn-action">Konfirmasi Pembelian</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 bg-slate-900 border border-slate-800 rounded-2xl">
+                <h4 id="txt-sec-1-title" class="text-xs font-bold text-blue-400 uppercase mb-2">Verifikasi Manual</h4>
+                <p id="txt-sec-1-desc" class="text-[10px] text-slate-400 leading-relaxed">Setiap transaksi akan diverifikasi oleh Admin melalui BscScan sebelum pengiriman koin.</p>
+            </div>
+            <div class="p-4 bg-slate-900 border border-slate-800 rounded-2xl">
+                <h4 id="txt-sec-2-title" class="text-xs font-bold text-red-400 uppercase mb-2">Peringatan Jaringan</h4>
+                <p id="txt-sec-2-desc" class="text-[10px] text-slate-400 leading-relaxed">Hanya kirim melalui jaringan BEP20. Kesalahan jaringan dapat menyebabkan dana hilang.</p>
+            </div>
+        </div>
+
+        <footer class="mt-12 text-center text-slate-600">
+            <p class="text-[10px] tracking-widest uppercase font-bold">&copy; 2026 Admin Azhar • Powered by Offchain System</p>
+        </footer>
+    </main>
+
+    <script>
+        let currentLang = 'ID';
+
+        const translations = {
+            ID: {
+                btn: "Switch to EN",
+                status: "ONLINE",
+                ticker: `<i class="fa-solid fa-fire text-orange-500 mr-2"></i> HARGA TERBAIK: <span class="blink-text">BELI USDT BEP20 DENGAN RATE KOMPETITIF</span> <i class="fa-solid fa-bolt ml-8"></i> PROSES CEPAT & AMAN`,
+                mainTitle: "Beli USDT BEP20",
+                mainDesc: "Pembayaran aman dan pengiriman koin instan setelah verifikasi.",
+                payInstr: "Scan & Bayar",
+                addrLabel: "Alamat Wallet Tujuan:",
+                amountLabel: "Jumlah USDT:",
+                receiverLabel: "Kirim ke Wallet Anda:",
+                btnAction: "Konfirmasi Pembelian",
+                sec1Title: "Verifikasi Manual",
+                sec1Desc: "Setiap transaksi akan diverifikasi oleh Admin melalui BscScan sebelum pengiriman koin.",
+                sec2Title: "Peringatan Jaringan",
+                sec2Desc: "Hanya kirim melalui jaringan BEP20. Kesalahan jaringan dapat menyebabkan dana hilang.",
+                copyMsg: "Alamat Berhasil Disalin!",
+                alertIncomplete: "Harap isi jumlah dan alamat wallet Anda!"
+            },
+            EN: {
+                btn: "Switch to ID",
+                status: "ACTIVE",
+                ticker: `<i class="fa-solid fa-fire text-orange-500 mr-2"></i> BEST RATE: <span class="blink-text">BUY USDT BEP20 WITH COMPETITIVE PRICES</span> <i class="fa-solid fa-bolt ml-8"></i> FAST & SECURE PROCESS`,
+                mainTitle: "Buy USDT BEP20",
+                mainDesc: "Secure payment and instant coin delivery after verification.",
+                payInstr: "Scan & Pay",
+                addrLabel: "Destination Wallet Address:",
+                amountLabel: "USDT Amount:",
+                receiverLabel: "Send to Your Wallet:",
+                btnAction: "Confirm Purchase",
+                sec1Title: "Manual Verification",
+                sec1Desc: "Each transaction is manually verified via BscScan before coin delivery.",
+                sec2Title: "Network Warning",
+                sec2Desc: "Send via BEP20 network only. Network errors will result in permanent loss.",
+                copyMsg: "Address Copied Successfully!",
+                alertIncomplete: "Please fill in the amount and your wallet address!"
+            }
+        };
+
+        function updateContent() {
+            const t = translations[currentLang];
+            document.getElementById('langBtn').innerText = t.btn;
+            document.getElementById('txt-status-label').innerText = t.status;
+            document.getElementById('ticker-content').innerHTML = t.ticker;
+            document.getElementById('txt-main-title').innerText = t.mainTitle;
+            document.getElementById('txt-main-desc').innerText = t.mainDesc;
+            document.getElementById('txt-pay-instr').innerHTML = `<i class="fa-solid fa-qrcode text-yellow-500"></i> ${t.payInstr}`;
+            document.getElementById('txt-addr-label').innerText = t.addrLabel;
+            document.getElementById('txt-amount-label').innerText = t.amountLabel;
+            document.getElementById('txt-receiver-label').innerText = t.receiverLabel;
+            document.getElementById('txt-btn-action').innerText = t.btnAction;
+            document.getElementById('txt-sec-1-title').innerText = t.sec1Title;
+            document.getElementById('txt-sec-1-desc').innerText = t.sec1Desc;
+            document.getElementById('txt-sec-2-title').innerText = t.sec2Title;
+            document.getElementById('txt-sec-2-desc').innerText = t.sec2Desc;
+        }
+
+        function toggleLang() {
+            currentLang = currentLang === 'ID' ? 'EN' : 'ID';
+            updateContent();
+        }
+
+        function copyWallet() {
+            navigator.clipboard.writeText(document.getElementById("walletAddr").value);
+            alert(translations[currentLang].copyMsg);
+        }
+
+        function confirmWA() {
+            const phone = "6282149694089";
+            const amount = document.getElementById("buyAmount").value;
+            const receiver = document.getElementById("receiverAddr").value;
+
+            if(!amount || !receiver) {
+                alert(translations[currentLang].alertIncomplete);
+                return;
+            }
+
+            const msg = currentLang === 'ID' 
+                ? `Halo Admin Azhar, saya ingin beli ${amount} USDT BEP20. Saya sudah transfer ke wallet Anda. Mohon kirim koin ke alamat saya: ${receiver}`
+                : `Hello Admin Azhar, I want to buy ${amount} USDT BEP20. I've transferred to your wallet. Please send coins to my address: ${receiver}`;
+            
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        document.addEventListener('DOMContentLoaded', updateContent);
+    </script>
+</body>
+</html>
