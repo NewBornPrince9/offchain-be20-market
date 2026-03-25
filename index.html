@@ -32,7 +32,7 @@
 
         .usdt-particle {
             position: fixed; z-index: 1; pointer-events: none;
-            color: rgba(74, 222, 128, 0.2); animation: floatParticles linear infinite; opacity: 0;
+            color: rgba(74, 222, 128, 0.15); animation: floatParticles linear infinite; opacity: 0;
         }
 
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -122,19 +122,22 @@
             </div>
         </div>
 
-        <div class="glass-card rounded-[2.5rem] p-7 md:p-10 shadow-2xl mb-8 border-green-500/20">
-            <h3 id="txt-video-title" class="text-xl font-black mb-6 border-l-4 border-green-500 pl-4 uppercase text-white">Bukti Likuiditas & Transaksi</h3>
-            <div class="rounded-[2rem] overflow-hidden border-4 border-slate-800 bg-black aspect-video relative shadow-inner">
-                <video id="proofVideo" class="w-full h-full object-cover" controls preload="metadata">
+        <div class="glass-card rounded-[2.5rem] p-7 md:p-10 shadow-2xl mb-8 border-green-500/20 flex flex-col items-center">
+            <h3 id="txt-video-title" class="text-xl font-black mb-6 border-l-4 border-green-500 pl-4 uppercase text-white w-full text-left">Bukti Likuiditas & Transaksi</h3>
+            
+            <div class="rounded-[2rem] overflow-hidden border-4 border-slate-800 bg-black relative shadow-inner w-full flex justify-center items-center h-[500px] md:h-[600px] lg:h-[700px]">
+                <video id="proofVideo" class="h-full w-auto object-contain" controls preload="metadata">
                     <source src="Proof.mp4" type="video/mp4">
                     Browser Anda tidak mendukung tag video.
                 </video>
-                <div class="absolute bottom-4 left-4 bg-green-600/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+                
+                <div class="absolute top-4 left-4 bg-green-600/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
                     <span class="w-2 h-2 bg-white rounded-full animate-ping"></span>
                     Verified $1.1M+ Liquidity
                 </div>
             </div>
-            <p id="txt-video-desc" class="text-slate-400 text-xs mt-4 italic text-center"></p>
+            
+            <p id="txt-video-desc" class="text-slate-400 text-xs mt-4 italic text-center w-full"></p>
         </div>
 
         <footer class="mt-16 text-center border-t border-slate-800 pt-10 pb-10">
@@ -157,7 +160,7 @@
                 mainDesc: "Penawaran Khusus: Cukup bayar 45% dari total nominal pembelian Anda.",
                 payInstr: "INSTRUKSI PEMBAYARAN",
                 videoTitle: "Bukti Likuiditas & Transaksi",
-                videoDesc: "Video ini menunjukkan saldo dompet asli dan riwayat pengiriman real-time demi keamanan transaksi Anda.",
+                videoDesc: "Video ini menunjukkan saldo dompet asli dan riwayat pengiriman real-time demi keamanan transaksi Anda (Format Penuh Vertikal).",
                 addrLabel: "Alamat Wallet Tujuan (Admin):", 
                 amountLabel: "Jumlah USDT Yang Diterima:", 
                 receiverLabel: "Wallet Anda (Penerima):", 
@@ -172,7 +175,7 @@
                 mainDesc: "Special Offer: Pay only 45% of your total purchase nominal.",
                 payInstr: "PAYMENT INSTRUCTIONS",
                 videoTitle: "Liquidity & Transaction Proof",
-                videoDesc: "This video demonstrates real-time wallet balance and transfer history for your security guarantee.",
+                videoDesc: "This video demonstrates real-time wallet balance and transfer history for your security guarantee (Full Vertical Format).",
                 addrLabel: "Destination Wallet (Admin):", 
                 amountLabel: "USDT Amount To Receive:", 
                 receiverLabel: "Your Wallet (Receiver):", 
@@ -224,7 +227,7 @@
 
         function createParticles() {
             const container = document.getElementById('particle-container');
-            for (let i = 0; i < 18; i++) {
+            for (let i = 0; i < 15; i++) {
                 const p = document.createElement('div');
                 p.className = 'usdt-particle fa-solid fa-coins';
                 p.style.left = Math.random() * 100 + 'vw';
