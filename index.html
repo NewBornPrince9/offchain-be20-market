@@ -9,17 +9,34 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* Animasi Running Text */
+        /* --- Animasi Kustom --- */
+
+        /* 1. Running Text (Ticker) */
         @keyframes scroll {
             0% { transform: translateX(100%); }
             100% { transform: translateX(-100%); }
         }
         
-        /* Animasi Teks Berkedip */
+        /* 2. Teks Berkedip */
         @keyframes blinker {
-            50% { opacity: 0; }
+            50% { opacity: 0.1; }
         }
         
+        /* 3. Animasi Mengambang (Floating Particles) */
+        @keyframes floatParticles {
+            0% {
+                transform: translateY(110vh) rotate(0deg);
+                opacity: 0;
+            }
+            15% { opacity: 0.2; } /* Sedikit muncul di awal */
+            85% { opacity: 0.2; } /* Tetap muncul */
+            100% {
+                transform: translateY(-20vh) rotate(360deg);
+                opacity: 0; /* Hilang di atas */
+            }
+        }
+
+        /* --- Kelas Utilitas Kustom --- */
         .animate-scroll {
             display: inline-block;
             white-space: nowrap;
@@ -31,21 +48,37 @@
         }
         
         .blink-promo {
-            animation: blinker 1s linear infinite;
+            animation: blinker 1.2s lg-linear infinite;
             color: #fbbf24;
             font-weight: 900;
         }
 
         .glass-card {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(16px);
             border: 1px solid rgba(51, 65, 85, 0.5);
+            z-index: 10; /* Pastikan di atas partikel */
+            position: relative;
+        }
+
+        /* --- Gaya Partikel Mengambang --- */
+        .usdt-particle {
+            position: fixed;
+            z-index: 1; /* Di belakang konten utama */
+            pointer-events: none; /* Klik tembus */
+            color: rgba(74, 222, 128, 0.2); /* Semi-transparan Green-400 */
+            font-size: 1.5rem; /* Ukuran dasar */
+            font-family: monospace; /* Kesan koding */
+            animation: floatParticles linear infinite;
+            opacity: 0; /* Tersembunyi sebelum animasi */
         }
     </style>
 </head>
-<body class="bg-slate-950 text-white font-sans antialiased min-h-screen">
+<body class="bg-slate-950 text-white font-sans antialiased min-h-screen relative overflow-x-hidden">
 
-    <header class="p-5 md:p-7 border-b border-slate-800 bg-slate-900/80 sticky top-0 z-50 flex justify-between items-center">
+    <div id="particle-container"></div>
+
+    <header class="p-5 md:p-7 border-b border-slate-800 bg-slate-900/90 sticky top-0 z-50 flex justify-between items-center backdrop-blur-sm">
         <div class="flex items-center gap-3">
             <div class="bg-yellow-500 p-2.5 rounded-xl text-black shadow-lg shadow-yellow-500/20">
                 <i class="fa-solid fa-cart-shopping text-xl"></i>
@@ -64,18 +97,18 @@
         </button>
     </header>
 
-    <div class="bg-slate-900 border-b border-slate-800 py-3.5 overflow-hidden flex items-center w-full relative">
+    <div class="bg-slate-900 border-b border-slate-800 py-3.5 overflow-hidden flex items-center w-full relative z-10">
         <div id="txt-status-label" class="bg-green-600 text-white text-[10px] font-black px-4 py-1.5 z-10 shadow-xl uppercase italic ml-3 rounded-lg shrink-0 flex items-center gap-2">
             <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
             ONLINE
         </div>
         <div class="animate-scroll">
-            <span id="ticker-content" class="mx-12 text-sm font-bold uppercase tracking-tight flex items-center gap-4">
+            <span id="ticker-content" class="mx-12 text-sm font-bold uppercase tracking-tight flex items-center gap-4 text-white">
                 </span>
         </div>
     </div>
 
-    <main class="max-w-3xl mx-auto my-8 p-5">
+    <main class="max-w-3xl mx-auto my-8 p-5 relative z-10">
         
         <div class="mb-10 text-center space-y-3">
             <h2 id="txt-main-title" class="text-3xl md:text-4xl font-black tracking-tight text-white uppercase">
@@ -86,10 +119,10 @@
             </div>
         </div>
 
-        <div class="glass-card rounded-[2.5rem] p-7 md:p-10 shadow-2xl relative overflow-hidden mb-8">
+        <div class="glass-card rounded-[2.5rem] p-7 md:p-10 shadow-2xl overflow-hidden mb-8">
             <div class="absolute -top-20 -right-20 w-64 h-64 bg-yellow-500/5 rounded-full blur-[80px]"></div>
             
-            <h3 id="txt-pay-instr" class="text-xl font-black mb-8 flex items-center gap-3 border-l-4 border-yellow-500 pl-4">
+            <h3 id="txt-pay-instr" class="text-xl font-black mb-8 flex items-center gap-3 border-l-4 border-yellow-500 pl-4 text-white">
                 INSTUKSI PEMBAYARAN
             </h3>
 
@@ -143,9 +176,9 @@
             </div>
         </div>
 
-        <footer class="mt-16 text-center border-t border-slate-800 pt-10">
+        <footer class="mt-16 text-center border-t border-slate-800 pt-10 relative z-10">
             <p class="text-[11px] tracking-[0.5em] uppercase font-black text-slate-700">&copy; 2026 Admin Azhar • Offchain Secure System</p>
-            <div class="flex justify-center gap-6 mt-6 opacity-30 grayscale hover:grayscale-0 transition-all">
+            <div class="flex justify-center gap-6 mt-6 opacity-20 grayscale">
                 <i class="fa-brands fa-bitcoin text-2xl"></i>
                 <i class="fa-brands fa-ethereum text-2xl"></i>
                 <i class="fa-solid fa-shield-halved text-2xl"></i>
@@ -187,7 +220,7 @@
             }
         };
 
-        // -- FUNGSI UPDATE TAMPILAN --
+        // -- FUNGSI UPDATE TAMPILAN BAHASA --
         function updateContent() {
             const t = translations[currentLang];
             document.getElementById('langBtn').querySelector('span').innerText = t.btn;
@@ -202,7 +235,7 @@
             document.getElementById('txt-btn-action').innerText = t.btnAction;
         }
 
-        // -- FUNGSI LOGIKA --
+        // -- FUNGSI LOGIKA DASAR --
         function toggleLang() {
             currentLang = (currentLang === 'ID') ? 'EN' : 'ID';
             updateContent();
@@ -232,8 +265,36 @@
             window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // Inisialisasi awal saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', updateContent);
+        // --- FUNGSI ANIMASI MENGAMBANG (USDT BEP20) ---
+        function createFloatingParticles() {
+            const container = document.getElementById('particle-container');
+            const particleCount = 20; // Jumlah ikon mengambang
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'usdt-particle fa-solid fa-coins'; // Gunakan ikon koin FontAwesome
+                
+                // Atur posisi horizontal acak
+                particle.style.left = Math.random() * 100 + 'vw';
+                
+                // Atur delay animasi acak
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                
+                // Atur durasi animasi acak (untuk kecepatan berbeda)
+                particle.style.animationDuration = Math.random() * 10 + 15 + 's';
+                
+                // Atur ukuran acak (untuk variasi)
+                particle.style.fontSize = (Math.random() * 1.5 + 0.8) + 'rem';
+
+                container.appendChild(particle);
+            }
+        }
+
+        // -- Inisialisasi awal saat halaman dimuat --
+        document.addEventListener('DOMContentLoaded', () => {
+            updateContent();
+            createFloatingParticles(); // Jalankan fungsi animasi
+        });
     </script>
 </body>
 </html>
