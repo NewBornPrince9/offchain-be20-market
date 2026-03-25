@@ -9,88 +9,49 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- Animasi Kustom --- */
-
-        /* 1. Running Text (Ticker) */
-        @keyframes scroll {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-        
-        /* 2. Teks Berkedip */
-        @keyframes blinker {
-            50% { opacity: 0.1; }
-        }
-        
-        /* 3. Animasi Mengambang (Floating Particles) */
+        /* Animasi Kustom */
+        @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        @keyframes blinker { 50% { opacity: 0.1; } }
         @keyframes floatParticles {
-            0% {
-                transform: translateY(110vh) rotate(0deg);
-                opacity: 0;
-            }
-            15% { opacity: 0.2; } /* Sedikit muncul di awal */
-            85% { opacity: 0.2; } /* Tetap muncul */
-            100% {
-                transform: translateY(-20vh) rotate(360deg);
-                opacity: 0; /* Hilang di atas */
-            }
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            15% { opacity: 0.2; }
+            85% { opacity: 0.2; }
+            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
         }
 
-        /* --- Kelas Utilitas Kustom --- */
-        .animate-scroll {
-            display: inline-block;
-            white-space: nowrap;
-            animation: scroll 25s linear infinite;
-        }
+        .animate-scroll { display: inline-block; white-space: nowrap; animation: scroll 25s linear infinite; }
+        .blink-promo { animation: blinker 1.2s linear infinite; color: #fbbf24; font-weight: 900; }
         
-        .animate-scroll:hover {
-            animation-play-state: paused;
-        }
-        
-        .blink-promo {
-            animation: blinker 1.2s lg-linear infinite;
-            color: #fbbf24;
-            font-weight: 900;
+        .glass-card { 
+            background: rgba(15, 23, 42, 0.9); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(51, 65, 85, 0.5); 
+            position: relative; 
+            z-index: 10;
         }
 
-        .glass-card {
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(51, 65, 85, 0.5);
-            z-index: 10; /* Pastikan di atas partikel */
-            position: relative;
-        }
-
-        /* --- Gaya Partikel Mengambang --- */
         .usdt-particle {
-            position: fixed;
-            z-index: 1; /* Di belakang konten utama */
-            pointer-events: none; /* Klik tembus */
-            color: rgba(74, 222, 128, 0.2); /* Semi-transparan Green-400 */
-            font-size: 1.5rem; /* Ukuran dasar */
-            font-family: monospace; /* Kesan koding */
-            animation: floatParticles linear infinite;
-            opacity: 0; /* Tersembunyi sebelum animasi */
+            position: fixed; z-index: 1; pointer-events: none;
+            color: rgba(74, 222, 128, 0.2); animation: floatParticles linear infinite; opacity: 0;
         }
+
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
 </head>
 <body class="bg-slate-950 text-white font-sans antialiased min-h-screen relative overflow-x-hidden">
 
     <div id="particle-container"></div>
 
-    <header class="p-5 md:p-7 border-b border-slate-800 bg-slate-900/90 sticky top-0 z-50 flex justify-between items-center backdrop-blur-sm">
+    <header class="p-5 md:p-7 border-b border-slate-800 bg-slate-900/90 sticky top-0 z-50 flex justify-between items-center backdrop-blur-md">
         <div class="flex items-center gap-3">
             <div class="bg-yellow-500 p-2.5 rounded-xl text-black shadow-lg shadow-yellow-500/20">
                 <i class="fa-solid fa-cart-shopping text-xl"></i>
             </div>
             <div>
-                <h1 class="text-xl md:text-2xl font-black tracking-tighter uppercase leading-none">
-                    OFFCHAIN <span class="text-yellow-400">MARKET</span>
-                </h1>
+                <h1 class="text-xl md:text-2xl font-black tracking-tighter uppercase leading-none">OFFCHAIN <span class="text-yellow-400">MARKET</span></h1>
                 <p class="text-[9px] text-slate-500 font-bold tracking-[0.2em] uppercase mt-1">Verified USDT BEP20 Provider</p>
             </div>
         </div>
-        
         <button onclick="toggleLang()" id="langBtn" class="group flex items-center gap-2 bg-slate-800 hover:bg-slate-700 px-5 py-2 rounded-full border border-slate-600 transition-all duration-300">
             <i class="fa-solid fa-globe text-slate-400 group-hover:text-yellow-400"></i>
             <span class="text-[10px] font-black uppercase tracking-widest">Switch to EN</span>
@@ -99,84 +60,84 @@
 
     <div class="bg-slate-900 border-b border-slate-800 py-3.5 overflow-hidden flex items-center w-full relative z-10">
         <div id="txt-status-label" class="bg-green-600 text-white text-[10px] font-black px-4 py-1.5 z-10 shadow-xl uppercase italic ml-3 rounded-lg shrink-0 flex items-center gap-2">
-            <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
-            ONLINE
+            <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span> ONLINE
         </div>
         <div class="animate-scroll">
-            <span id="ticker-content" class="mx-12 text-sm font-bold uppercase tracking-tight flex items-center gap-4 text-white">
-                </span>
+            <span id="ticker-content" class="mx-12 text-sm font-bold uppercase tracking-tight flex items-center gap-4 text-white"></span>
         </div>
     </div>
 
     <main class="max-w-3xl mx-auto my-8 p-5 relative z-10">
         
         <div class="mb-10 text-center space-y-3">
-            <h2 id="txt-main-title" class="text-3xl md:text-4xl font-black tracking-tight text-white uppercase">
-                Beli USDT BEP20
-            </h2>
+            <h2 id="txt-main-title" class="text-3xl md:text-4xl font-black tracking-tight uppercase">Beli USDT BEP20</h2>
             <div class="inline-block bg-yellow-500/10 border border-yellow-500/30 px-6 py-2 rounded-2xl">
                 <p id="txt-main-desc" class="text-yellow-400 text-sm font-bold italic"></p>
             </div>
         </div>
 
-        <div class="glass-card rounded-[2.5rem] p-7 md:p-10 shadow-2xl overflow-hidden mb-8">
-            <div class="absolute -top-20 -right-20 w-64 h-64 bg-yellow-500/5 rounded-full blur-[80px]"></div>
+        <div class="glass-card rounded-[2.5rem] p-7 md:p-10 shadow-2xl overflow-hidden mb-8 border-yellow-500/20">
+            <h3 id="txt-pay-instr" class="text-xl font-black mb-8 border-l-4 border-yellow-500 pl-4 uppercase">Instruksi Pembayaran</h3>
             
-            <h3 id="txt-pay-instr" class="text-xl font-black mb-8 flex items-center gap-3 border-l-4 border-yellow-500 pl-4 text-white">
-                INSTUKSI PEMBAYARAN
-            </h3>
-
             <div class="flex flex-col items-center justify-center mb-10">
-                <div class="bg-white p-4 rounded-[2rem] shadow-[0_0_50px_rgba(234,179,8,0.2)] transform hover:scale-105 transition-transform duration-500">
+                <div class="bg-white p-4 rounded-[2rem] shadow-[0_0_50px_rgba(234,179,8,0.25)] transform hover:scale-105 transition-all duration-500">
                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=0x61C0604221ae4755DEeed46d03A154230c0D41c2" alt="Payment QR" class="w-48 h-48 md:w-56 md:h-56">
                 </div>
                 <div class="mt-6 flex flex-col items-center gap-2">
                     <span class="text-[11px] font-black text-slate-500 uppercase tracking-[0.3em]">Network Protocol</span>
-                    <div class="bg-yellow-500 text-black px-6 py-1.5 rounded-full text-[12px] font-black uppercase">
-                        BNB Smart Chain (BEP20)
-                    </div>
+                    <div class="bg-yellow-500 text-black px-6 py-1.5 rounded-full text-[12px] font-black uppercase shadow-lg shadow-yellow-500/20">BNB Smart Chain (BEP20)</div>
                 </div>
             </div>
 
             <div class="space-y-8">
-                <div class="group">
-                    <label id="txt-addr-label" class="block text-[11px] font-black text-slate-500 uppercase mb-3 ml-2 tracking-widest">Alamat Wallet Tujuan (Admin):</label>
-                    <div class="relative">
-                        <input type="text" id="walletAddr" readonly value="0x61C0604221ae4755DEeed46d03A154230c0D41c2" 
-                               class="w-full bg-slate-950/50 border-2 border-slate-800 p-5 pr-16 rounded-2xl text-[11px] md:text-xs font-mono text-yellow-100 outline-none focus:border-yellow-500/50 transition-all">
-                        <button onclick="copyWallet()" class="absolute right-4 top-1/2 -translate-y-1/2 p-3 text-slate-500 hover:text-white transition-colors">
-                            <i class="fa-regular fa-copy text-xl"></i>
-                        </button>
+                <div>
+                    <label id="txt-addr-label" class="block text-[11px] font-black text-slate-500 uppercase mb-3 ml-2 tracking-widest"></label>
+                    <div class="relative group">
+                        <input type="text" id="walletAddr" readonly value="0x61C0604221ae4755DEeed46d03A154230c0D41c2" class="w-full bg-slate-950/50 border-2 border-slate-800 p-5 pr-16 rounded-2xl text-[10px] md:text-xs font-mono text-yellow-100 outline-none focus:border-yellow-500/40 transition-all">
+                        <button onclick="copyWallet()" class="absolute right-4 top-1/2 -translate-y-1/2 p-3 text-slate-500 hover:text-white transition-colors"><i class="fa-regular fa-copy text-xl"></i></button>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-slate-950/50 p-6 rounded-3xl border-2 border-slate-800 group focus-within:border-yellow-500/30 transition-all">
-                        <label id="txt-amount-label" class="block text-[11px] text-slate-500 mb-3 font-black uppercase tracking-widest">Jumlah Yang Diterima:</label>
+                    <div class="bg-slate-950/50 p-6 rounded-3xl border-2 border-slate-800 focus-within:border-yellow-500/30 transition-all">
+                        <label id="txt-amount-label" class="block text-[11px] text-slate-500 mb-3 font-black uppercase tracking-widest"></label>
                         <div class="flex items-center gap-3 border-b-2 border-slate-800 pb-2">
                             <span class="text-yellow-500 font-black">USDT</span>
-                            <input type="number" id="buyAmount" placeholder="0.00" 
-                                   class="w-full bg-transparent p-1 text-xl text-white outline-none font-black placeholder:text-slate-800">
+                            <input type="number" id="buyAmount" placeholder="0.00" class="w-full bg-transparent p-1 text-xl text-white outline-none font-black placeholder:text-slate-800">
                         </div>
                     </div>
                     <div class="bg-slate-950/50 p-6 rounded-3xl border-2 border-slate-800 focus-within:border-yellow-500/30 transition-all">
-                        <label id="txt-receiver-label" class="block text-[11px] text-slate-500 mb-3 font-black uppercase tracking-widest">Wallet Anda (Penerima):</label>
+                        <label id="txt-receiver-label" class="block text-[11px] text-slate-500 mb-3 font-black uppercase tracking-widest"></label>
                         <div class="flex items-center gap-3 border-b-2 border-slate-800 pb-2">
                             <i class="fa-solid fa-wallet text-slate-600"></i>
-                            <input type="text" id="receiverAddr" placeholder="0x..." 
-                                   class="w-full bg-transparent p-1 text-sm text-white outline-none font-mono placeholder:text-slate-800">
+                            <input type="text" id="receiverAddr" placeholder="0x..." class="w-full bg-transparent p-1 text-sm text-white outline-none font-mono placeholder:text-slate-800">
                         </div>
                     </div>
                 </div>
 
-                <button onclick="confirmWA()" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-slate-950 font-black py-5 rounded-3xl transition duration-500 flex items-center justify-center gap-4 uppercase shadow-[0_20px_40px_rgba(234,179,8,0.15)] group">
+                <button onclick="confirmWA()" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 text-slate-950 font-black py-5 rounded-3xl flex items-center justify-center gap-4 uppercase shadow-xl group transition-all duration-300">
                     <i class="fa-brands fa-whatsapp text-2xl group-hover:scale-110 transition-transform"></i>
-                    <span id="txt-btn-action" class="text-lg tracking-tighter">Konfirmasi Pembelian</span>
+                    <span id="txt-btn-action" class="text-lg tracking-tighter"></span>
                 </button>
             </div>
         </div>
 
-        <footer class="mt-16 text-center border-t border-slate-800 pt-10 relative z-10">
+        <div class="glass-card rounded-[2.5rem] p-7 md:p-10 shadow-2xl mb-8 border-green-500/20">
+            <h3 id="txt-video-title" class="text-xl font-black mb-6 border-l-4 border-green-500 pl-4 uppercase text-white">Bukti Likuiditas & Transaksi</h3>
+            <div class="rounded-[2rem] overflow-hidden border-4 border-slate-800 bg-black aspect-video relative shadow-inner">
+                <video id="proofVideo" class="w-full h-full object-cover" controls preload="metadata">
+                    <source src="Proof.mp4" type="video/mp4">
+                    Browser Anda tidak mendukung tag video.
+                </video>
+                <div class="absolute bottom-4 left-4 bg-green-600/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+                    <span class="w-2 h-2 bg-white rounded-full animate-ping"></span>
+                    Verified $1.1M+ Liquidity
+                </div>
+            </div>
+            <p id="txt-video-desc" class="text-slate-400 text-xs mt-4 italic text-center"></p>
+        </div>
+
+        <footer class="mt-16 text-center border-t border-slate-800 pt-10 pb-10">
             <p class="text-[11px] tracking-[0.5em] uppercase font-black text-slate-700">&copy; 2026 Admin Azhar • Offchain Secure System</p>
             <div class="flex justify-center gap-6 mt-6 opacity-20 grayscale">
                 <i class="fa-brands fa-bitcoin text-2xl"></i>
@@ -187,40 +148,40 @@
     </main>
 
     <script>
-        // -- DATA BAHASA & TERJEMAHAN --
         let currentLang = 'ID';
         const translations = {
             ID: { 
-                btn: "Switch to EN", 
-                status: "ONLINE", 
-                ticker: `<i class="fa-solid fa-bolt text-yellow-400"></i> PROMO OFFCHAIN: <span class="blink-promo">HARGA HANYA 45% DARI TOTAL NILAI PEMBELIAN</span> <i class="fa-solid fa-star text-yellow-400 ml-10"></i> TRANSAKSI AMAN & TERVERIFIKASI BSC SCAN`, 
+                btn: "Switch to EN", status: "ONLINE",
+                ticker: `<i class="fa-solid fa-bolt text-yellow-400"></i> PROMO OFFCHAIN: <span class="blink-promo">BAYAR 45% UNTUK 100% NILAI USDT</span> <i class="fa-solid fa-star text-yellow-400 ml-10"></i> TRANSAKSI AMAN & TERPERCAYA`, 
                 mainTitle: "Beli USDT BEP20",
-                mainDesc: "Penawaran Eksklusif: Bayar 45% untuk mendapatkan 100% nilai koin.",
-                payInstr: "INSTRUKSI PEMBAYARAN", 
+                mainDesc: "Penawaran Khusus: Cukup bayar 45% dari total nominal pembelian Anda.",
+                payInstr: "INSTRUKSI PEMBAYARAN",
+                videoTitle: "Bukti Likuiditas & Transaksi",
+                videoDesc: "Video ini menunjukkan saldo dompet asli dan riwayat pengiriman real-time demi keamanan transaksi Anda.",
                 addrLabel: "Alamat Wallet Tujuan (Admin):", 
                 amountLabel: "Jumlah USDT Yang Diterima:", 
                 receiverLabel: "Wallet Anda (Penerima):", 
                 btnAction: "Konfirmasi Pembelian", 
-                copyMsg: "Alamat Wallet Berhasil Disalin!", 
-                alertIncomplete: "Harap isi jumlah USDT dan alamat wallet penerima Anda!" 
+                copyMsg: "Alamat Wallet Berhasil Disalin!",
+                alertIncomplete: "Harap isi jumlah USDT dan alamat dompet penerima Anda!"
             },
             EN: { 
-                btn: "Switch to ID", 
-                status: "ACTIVE", 
-                ticker: `<i class="fa-solid fa-bolt text-yellow-400"></i> OFFCHAIN PROMO: <span class="blink-promo">PRICE IS ONLY 45% OF TOTAL NOMINAL VALUE</span> <i class="fa-solid fa-star text-yellow-400 ml-10"></i> SECURE TRANSACTIONS & BSC SCAN VERIFIED`, 
+                btn: "Switch to ID", status: "ACTIVE",
+                ticker: `<i class="fa-solid fa-bolt text-yellow-400"></i> OFFCHAIN PROMO: <span class="blink-promo">PAY 45% FOR 100% USDT VALUE</span> <i class="fa-solid fa-star text-yellow-400 ml-10"></i> SECURE & TRUSTED`, 
                 mainTitle: "Buy USDT BEP20",
-                mainDesc: "Exclusive Offer: Pay 45% to get 100% of the coin value.",
-                payInstr: "PAYMENT INSTRUCTIONS", 
+                mainDesc: "Special Offer: Pay only 45% of your total purchase nominal.",
+                payInstr: "PAYMENT INSTRUCTIONS",
+                videoTitle: "Liquidity & Transaction Proof",
+                videoDesc: "This video demonstrates real-time wallet balance and transfer history for your security guarantee.",
                 addrLabel: "Destination Wallet (Admin):", 
                 amountLabel: "USDT Amount To Receive:", 
                 receiverLabel: "Your Wallet (Receiver):", 
                 btnAction: "Confirm Purchase", 
-                copyMsg: "Wallet Address Copied Successfully!", 
-                alertIncomplete: "Please enter the USDT amount and your receiver wallet address!" 
+                copyMsg: "Wallet Address Copied!",
+                alertIncomplete: "Please enter the USDT amount and your receiver wallet address!"
             }
         };
 
-        // -- FUNGSI UPDATE TAMPILAN BAHASA --
         function updateContent() {
             const t = translations[currentLang];
             document.getElementById('langBtn').querySelector('span').innerText = t.btn;
@@ -229,72 +190,52 @@
             document.getElementById('txt-main-title').innerText = t.mainTitle;
             document.getElementById('txt-main-desc').innerText = t.mainDesc;
             document.getElementById('txt-pay-instr').innerText = t.payInstr;
+            document.getElementById('txt-video-title').innerText = t.videoTitle;
+            document.getElementById('txt-video-desc').innerText = t.videoDesc;
             document.getElementById('txt-addr-label').innerText = t.addrLabel;
             document.getElementById('txt-amount-label').innerText = t.amountLabel;
             document.getElementById('txt-receiver-label').innerText = t.receiverLabel;
             document.getElementById('txt-btn-action').innerText = t.btnAction;
         }
 
-        // -- FUNGSI LOGIKA DASAR --
-        function toggleLang() {
-            currentLang = (currentLang === 'ID') ? 'EN' : 'ID';
-            updateContent();
+        function toggleLang() { currentLang = (currentLang === 'ID') ? 'EN' : 'ID'; updateContent(); }
+        
+        function copyWallet() { 
+            navigator.clipboard.writeText(document.getElementById("walletAddr").value); 
+            alert(translations[currentLang].copyMsg); 
         }
-
-        function copyWallet() {
-            const el = document.getElementById("walletAddr");
-            navigator.clipboard.writeText(el.value);
-            alert(translations[currentLang].copyMsg);
-        }
-
+        
         function confirmWA() {
-            const phone = "6282149694089";
             const amount = document.getElementById("buyAmount").value;
             const receiver = document.getElementById("receiverAddr").value;
 
-            if(!amount || !receiver) {
-                alert(translations[currentLang].alertIncomplete);
-                return;
+            if(!amount || !receiver) { 
+                alert(translations[currentLang].alertIncomplete); 
+                return; 
             }
 
             const finalPrice = (amount * 0.45).toFixed(2);
-            const msg = currentLang === 'ID' 
-                ? `Halo Admin Azhar, saya ingin beli ${amount} USDT BEP20. Sesuai promo 45%, saya akan membayar sebesar ${finalPrice} USDT. Mohon kirim koin ke alamat saya: ${receiver}`
-                : `Hello Admin Azhar, I want to buy ${amount} USDT BEP20. Per the 45% promo, I will pay ${finalPrice} USDT. Please send the coins to my address: ${receiver}`;
+            const msg = currentLang === 'ID'
+                ? `Halo Admin Azhar, saya ingin beli ${amount} USDT BEP20. Sesuai promo 45%, saya akan membayar ${finalPrice} USDT. Mohon kirim ke alamat saya: ${receiver}`
+                : `Hello Admin Azhar, I want to buy ${amount} USDT BEP20. Per the 45% promo, I will pay ${finalPrice} USDT. Please send to my address: ${receiver}`;
             
-            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+            window.open(`https://wa.me/6282149694089?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // --- FUNGSI ANIMASI MENGAMBANG (USDT BEP20) ---
-        function createFloatingParticles() {
+        function createParticles() {
             const container = document.getElementById('particle-container');
-            const particleCount = 20; // Jumlah ikon mengambang
-
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'usdt-particle fa-solid fa-coins'; // Gunakan ikon koin FontAwesome
-                
-                // Atur posisi horizontal acak
-                particle.style.left = Math.random() * 100 + 'vw';
-                
-                // Atur delay animasi acak
-                particle.style.animationDelay = Math.random() * 15 + 's';
-                
-                // Atur durasi animasi acak (untuk kecepatan berbeda)
-                particle.style.animationDuration = Math.random() * 10 + 15 + 's';
-                
-                // Atur ukuran acak (untuk variasi)
-                particle.style.fontSize = (Math.random() * 1.5 + 0.8) + 'rem';
-
-                container.appendChild(particle);
+            for (let i = 0; i < 18; i++) {
+                const p = document.createElement('div');
+                p.className = 'usdt-particle fa-solid fa-coins';
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.animationDelay = Math.random() * 15 + 's';
+                p.style.animationDuration = Math.random() * 10 + 15 + 's';
+                p.style.fontSize = (Math.random() * 1.2 + 0.6) + 'rem';
+                container.appendChild(p);
             }
         }
 
-        // -- Inisialisasi awal saat halaman dimuat --
-        document.addEventListener('DOMContentLoaded', () => {
-            updateContent();
-            createFloatingParticles(); // Jalankan fungsi animasi
-        });
+        document.addEventListener('DOMContentLoaded', () => { updateContent(); createParticles(); });
     </script>
 </body>
 </html>
