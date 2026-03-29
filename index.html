@@ -417,6 +417,33 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => { updateContent(); createParticles(); });
+        // Fungsi Animasi Angka Berjalan (Counter)
+function animateLiquidity() {
+    const counterElement = document.getElementById('liquidity-counter');
+    let baseValue = 1109900.00; // Sesuai saldo di video Proof.mp4 Anda
+
+    setInterval(() => {
+        // Simulasi perubahan kecil (seolah-olah ada transaksi masuk/keluar)
+        const fluctuation = (Math.random() * 50) - 20; 
+        baseValue += fluctuation;
+        
+        // Format ke format mata uang (1,109,900.00)
+        counterElement.innerText = baseValue.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+        
+        // Update waktu update
+        const now = new Date();
+        document.getElementById('last-update-time').innerText = now.toLocaleTimeString();
+    }, 4000); // Update setiap 4 detik
+}
+
+// Panggil fungsi di dalam DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => { 
+    // ... kode lama ...
+    animateLiquidity(); 
+});
     </script>
 </body>
 </html>
